@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAemQuery from '../api/useAemQuery';
-import useAemImage from '../api/useAemImage';
+import { getAemConfig } from '../utils/aemConfig';
 import { SAMPLE_COURSES } from '../utils/sampleData';
 
 function difficultyClass(level) {
@@ -48,8 +48,8 @@ function CardPlaceholder({ title, difficultyLevel }) {
 function CourseCard({ course }) {
   const navigate = useNavigate();
   const { _path, slug, title, duration, difficultyLevel, tags, shortDescription, courseImage } = course;
-  const rawImgUrl = courseImage?._publishUrl || courseImage?._authorUrl || null;
-  const imgSrc = useAemImage(rawImgUrl);
+  const { publishHost } = getAemConfig();
+  const imgSrc = courseImage?._path ? `${publishHost}${courseImage._path}` : null;
 
   const editorProps = _path ? {
     'data-aue-resource': `urn:aemconnection:${_path}/jcr:content/data/master`,
