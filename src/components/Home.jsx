@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CourseGrid from './CourseGrid';
+import FeaturedInsights from './FeaturedInsights';
 
 const DURATION_FILTERS = [
   { label: 'All', value: 'all' },
@@ -9,7 +10,7 @@ const DURATION_FILTERS = [
   { label: '8+ hours', value: '8' },
 ];
 
-function Home() {
+function Home({ onAemError }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [durationFilter, setDurationFilter] = useState('all');
 
@@ -53,6 +54,8 @@ function Home() {
         searchQuery={searchQuery}
         durationFilter={durationFilter === 'all' ? '' : durationFilter}
       />
+
+      <FeaturedInsights onError={onAemError} />
     </>
   );
 }
