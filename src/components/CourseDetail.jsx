@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import useGraphQL from '../api/useGraphQL';
-import { useSampleData } from '../utils/fetchData';
+import useAemQuery from '../api/useAemQuery';
 import { getSampleCourseDetail } from '../utils/sampleData';
 import Loading from './base/Loading';
 import Error from './base/Error';
@@ -15,10 +14,21 @@ function difficultyClass(level) {
   return '';
 }
 
-function toList(value) {
+function parseHtmlList(value) {
   if (!value) return [];
   if (Array.isArray(value)) return value;
-  return value.split('\n').filter(Boolean);
+  if (typeof value === 'object' && value.html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(value.html, 'text/html');
+    const items = Array.from(doc.querySelectorAll('li')).map((li) => li.textContent.trim());
+    return items.length ? items : [];
+  }
+  if (typeof value === 'string') return value.split('\n').filter(Boolean);
+  return [];
+}
+
+function stripTagNamespace(tag) {
+  return typeof tag === 'string' ? tag.replace(/^[^:]+:/, '') : tag;
 }
 
 function CourseDetailRender({ course }) {
@@ -31,23 +41,28 @@ function CourseDetailRender({ course }) {
     learningObjectives,
     prerequisites,
     courseMaterial,
+    courseImage,
+    tags,
   } = course;
 
-  const editorProps = {
+  const editorProps = _path ? {
     'data-aue-resource': `urn:aemconnection:${_path}/jcr:content/data/master`,
     'data-aue-type': 'reference',
     itemFilter: 'cf',
-  };
+  } : {};
 
-  const objectives = toList(learningObjectives);
-  const prereqs = toList(prerequisites);
+  const objectives = parseHtmlList(learningObjectives);
+  const prereqs = parseHtmlList(prerequisites);
+
+  const heroImg = courseImage?._publishUrl || courseImage?._authorUrl;
 
   return (
     <div className="detail-shell" {...editorProps}>
       <div
         className="detail-hero"
-        data-aue-resource={`urn:aemconnection:${_path}/jcr:content/data/master`}
-        data-aue-type="reference"
+        style={heroImg ? { backgroundImage: `url(${heroImg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+        data-aue-resource={_path ? `urn:aemconnection:${_path}/jcr:content/data/master` : undefined}
+        data-aue-type={_path ? 'reference' : undefined}
       >
         <div className="detail-meta">
           <span className={`badge ${difficultyClass(difficultyLevel)}`} data-aue-prop="difficultyLevel" data-aue-type="text">
@@ -64,6 +79,13 @@ function CourseDetailRender({ course }) {
           <p className="detail-lead" data-aue-prop="shortDescription" data-aue-type="text">
             {shortDescription}
           </p>
+        )}
+        {tags?.length > 0 && (
+          <div className="tags" style={{ marginTop: 12 }}>
+            {tags.map((tag) => (
+              <span key={tag} className="tag">{stripTagNamespace(tag)}</span>
+            ))}
+          </div>
         )}
       </div>
 
@@ -90,7 +112,7 @@ function CourseDetailRender({ course }) {
         <div className="detail-side">
           <div className="material">
             <h4>Course Material</h4>
-            {courseMaterial ? (
+            {courseMaterial?._publishUrl ? (
               <button
                 className="btn-primary"
                 onClick={() => window.open(courseMaterial._publishUrl, '_blank')}
@@ -121,32 +143,35 @@ function NotFound() {
   );
 }
 
-function CourseDetailAEM() {
-  const { encodedPath } = useParams();
-  const path = decodeURIComponent(encodedPath);
-  const persistentQuery = `siemens-learning/course-by-path;path=${encodeURIComponent(path)}`;
-  const { data, errorMessage } = useGraphQL(persistentQuery);
+function CourseDetailContent() {
+  const { slug } = useParams();
+  const { data, errorMessage, loading } = useAemQuery(
+    `Siemens-learning/getCourseBySlug;slug=${slug}`
+  );
 
-  if (errorMessage) return <Error errorMessage={errorMessage} />;
-  if (!data) return <Loading />;
+  if (loading) return <Loading />;
+  if (errorMessage && !data) {
+    const sampleCourse = getSampleCourseDetail(slug);
+    if (sampleCourse) return <CourseDetailRender course={sampleCourse} />;
+    return <Error errorMessage={errorMessage} />;
+  }
 
-  const course = data?.courseByPath?.item;
-  if (!course) return <NotFound />;
+  const course =
+    data?.courseList?.items?.[0] ||
+    data?.getCourseBySlug?.item ||
+    data?.courseBySlug?.item ||
+    null;
 
-  return <CourseDetailRender course={course} />;
-}
+  if (!course) {
+    const sampleCourse = getSampleCourseDetail(slug);
+    if (sampleCourse) return <CourseDetailRender course={sampleCourse} />;
+    return <NotFound />;
+  }
 
-function CourseDetailSample() {
-  const { encodedPath } = useParams();
-  const path = decodeURIComponent(encodedPath);
-  const course = getSampleCourseDetail(path);
-
-  if (!course) return <NotFound />;
   return <CourseDetailRender course={course} />;
 }
 
 function CourseDetail() {
-  const isSample = useSampleData();
   const navigate = useNavigate();
 
   return (
@@ -156,7 +181,7 @@ function CourseDetail() {
           ← Siemens Learning Hub
         </button>
       </header>
-      {isSample ? <CourseDetailSample /> : <CourseDetailAEM />}
+      <CourseDetailContent />
     </>
   );
 }

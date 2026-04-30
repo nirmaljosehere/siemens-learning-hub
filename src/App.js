@@ -120,7 +120,7 @@ function App() {
           <main className="main">
             <Routes>
               <Route path="/" element={<Home onAemError={() => setAemStatus('error')} />} />
-              <Route path="/courses/:encodedPath" element={<CourseDetail />} />
+              <Route path="/courses/:slug" element={<CourseDetail />} />
             </Routes>
           </main>
         </div>

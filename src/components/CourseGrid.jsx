@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useGraphQL from '../api/useGraphQL';
-import { useSampleData } from '../utils/fetchData';
+import useAemQuery from '../api/useAemQuery';
+import useAemImage from '../api/useAemImage';
 import { SAMPLE_COURSES } from '../utils/sampleData';
-import Error from './base/Error';
 
 function difficultyClass(level) {
   if (!level) return '';
@@ -48,25 +47,31 @@ function CardPlaceholder({ title, difficultyLevel }) {
 
 function CourseCard({ course }) {
   const navigate = useNavigate();
-  const { _path, title, duration, difficultyLevel, tags, shortDescription } = course;
+  const { _path, slug, title, duration, difficultyLevel, tags, shortDescription, courseImage } = course;
+  const rawImgUrl = courseImage?._publishUrl || courseImage?._authorUrl || null;
+  const imgSrc = useAemImage(rawImgUrl);
 
-  const editorProps = {
+  const editorProps = _path ? {
     'data-aue-resource': `urn:aemconnection:${_path}/jcr:content/data/master`,
     'data-aue-type': 'reference',
     'data-aue-filter': 'cf',
     'data-aue-label': title,
-  };
+  } : {};
 
-  const encodedPath = encodeURIComponent(_path);
+  const courseSlug = slug || _path?.split('/').pop() || encodeURIComponent(title);
 
   return (
     <article
       className="card"
-      onClick={() => navigate(`/courses/${encodedPath}${window.location.search}`)}
+      onClick={() => navigate(`/courses/${courseSlug}${window.location.search}`)}
       {...editorProps}
     >
       <div className="card-media">
-        <CardPlaceholder title={title} difficultyLevel={difficultyLevel} />
+        {imgSrc ? (
+          <img src={imgSrc} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        ) : (
+          <CardPlaceholder title={title} difficultyLevel={difficultyLevel} />
+        )}
       </div>
       <div className="card-body">
         <div className="card-meta">
@@ -112,16 +117,14 @@ function SkeletonCard() {
 }
 
 function CourseGrid({ searchQuery, durationFilter }) {
-  const persistentQuery = 'siemens-learning/courses-all';
-  const { data, errorMessage } = useGraphQL(persistentQuery);
-  const isSample = useSampleData();
+  const { data, errorMessage, loading } = useAemQuery('Siemens-learning/getAllCourse');
 
-  const rawCourses = isSample
-    ? SAMPLE_COURSES
-    : data?.courseList?.items || null;
+  const aemCourses = data
+    ? (data.getAllCourseList?.items || data.courseList?.items || data.siemensLearningList?.items || null)
+    : null;
+  const rawCourses = aemCourses ?? ((!loading && (errorMessage || data)) ? SAMPLE_COURSES : null);
 
-  if (!isSample && errorMessage) return <Error errorMessage={errorMessage} />;
-  if (!rawCourses) {
+  if (loading || !rawCourses) {
     return (
       <section className="course-grid" aria-live="polite">
         {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
@@ -159,7 +162,7 @@ function CourseGrid({ searchQuery, durationFilter }) {
   return (
     <section className="course-grid" aria-live="polite">
       {filtered.map((course) => (
-        <CourseCard key={course._path} course={course} />
+        <CourseCard key={course._path || course.slug || course.title} course={course} />
       ))}
     </section>
   );

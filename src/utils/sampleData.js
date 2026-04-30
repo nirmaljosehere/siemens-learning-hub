@@ -1,6 +1,7 @@
 export const SAMPLE_COURSES = [
   {
     _path: '/content/dam/siemens-learning/courses/intro-to-tia-portal',
+    slug: 'intro-to-tia-portal',
     title: 'Introduction to TIA Portal',
     duration: '2–5 hours',
     difficultyLevel: 'Beginner',
@@ -10,6 +11,7 @@ export const SAMPLE_COURSES = [
   },
   {
     _path: '/content/dam/siemens-learning/courses/simatic-s7-1500-fundamentals',
+    slug: 'simatic-s7-1500-fundamentals',
     title: 'SIMATIC S7-1500 Fundamentals',
     duration: '5–8 hours',
     difficultyLevel: 'Intermediate',
@@ -19,6 +21,7 @@ export const SAMPLE_COURSES = [
   },
   {
     _path: '/content/dam/siemens-learning/courses/sinamics-drives-startup',
+    slug: 'sinamics-drives-startup',
     title: 'SINAMICS Drives — Commissioning',
     duration: '8–12 hours',
     difficultyLevel: 'Intermediate',
@@ -28,6 +31,7 @@ export const SAMPLE_COURSES = [
   },
   {
     _path: '/content/dam/siemens-learning/courses/mindsphere-iot-essentials',
+    slug: 'mindsphere-iot-essentials',
     title: 'MindSphere IoT Essentials',
     duration: '2–5 hours',
     difficultyLevel: 'Beginner',
@@ -37,6 +41,7 @@ export const SAMPLE_COURSES = [
   },
   {
     _path: '/content/dam/siemens-learning/courses/safety-integrated-advanced',
+    slug: 'safety-integrated-advanced',
     title: 'Safety Integrated — Advanced',
     duration: '12–15+ hours',
     difficultyLevel: 'Advanced',
@@ -46,6 +51,7 @@ export const SAMPLE_COURSES = [
   },
   {
     _path: '/content/dam/siemens-learning/courses/wincc-unified-hmi',
+    slug: 'wincc-unified-hmi',
     title: 'WinCC Unified HMI Design',
     duration: '5–8 hours',
     difficultyLevel: 'Intermediate',
@@ -55,6 +61,7 @@ export const SAMPLE_COURSES = [
   },
   {
     _path: '/content/dam/siemens-learning/courses/profinet-networking',
+    slug: 'profinet-networking',
     title: 'PROFINET Networking',
     duration: '5–8 hours',
     difficultyLevel: 'Intermediate',
@@ -64,6 +71,7 @@ export const SAMPLE_COURSES = [
   },
   {
     _path: '/content/dam/siemens-learning/courses/digital-twin-with-nx',
+    slug: 'digital-twin-with-nx',
     title: 'Digital Twin with NX & Teamcenter',
     duration: '8–12 hours',
     difficultyLevel: 'Advanced',
@@ -102,13 +110,19 @@ const DETAIL_EXTRAS = {
   },
 };
 
-export function getSampleCourseDetail(path) {
-  const base = SAMPLE_COURSES.find((c) => c._path === path);
+export function getSampleCourseDetail(pathOrSlug) {
+  const base = SAMPLE_COURSES.find(
+    (c) => c._path === pathOrSlug || c.slug === pathOrSlug
+  );
   if (!base) return null;
-  const extras = DETAIL_EXTRAS[path] || {
+  const extras = DETAIL_EXTRAS[base._path] || {
     learningObjectives: ['Outcome A', 'Outcome B', 'Outcome C'],
     prerequisites: ['General Siemens automation literacy'],
     courseMaterial: null,
   };
   return { ...base, ...extras };
+}
+
+export function getSampleCourseBySlug(slug) {
+  return getSampleCourseDetail(slug);
 }
