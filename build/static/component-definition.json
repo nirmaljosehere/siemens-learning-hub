@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "title": "Siemens Learning Hub",
+      "id": "siemens-learning-hub",
+      "components": [
+        {
+          "title": "Course",
+          "id": "course",
+          "plugins": {
+            "aem": {
+              "page": {
+                "resourceType": "siemens-learning/components/course",
+                "template": { "resourceType": "siemens-learning/components/course" }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

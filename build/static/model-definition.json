@@ -1,0 +1,17 @@
+{
+  "definitions": [
+    {
+      "title": "Course",
+      "id": "course",
+      "fields": [
+        { "component": "text", "name": "title", "label": "Title", "valueType": "string" },
+        { "component": "text", "name": "shortDescription", "label": "Short Description", "valueType": "string" },
+        { "component": "text", "name": "duration", "label": "Duration", "valueType": "string" },
+        { "component": "text", "name": "difficultyLevel", "label": "Difficulty Level", "valueType": "string" },
+        { "component": "richtext", "name": "learningObjectives", "label": "Learning Objectives", "valueType": "string" },
+        { "component": "richtext", "name": "prerequisites", "label": "Prerequisites", "valueType": "string" },
+        { "component": "media", "name": "courseMaterial", "label": "Course Material" }
+      ]
+    }
+  ]
+}
