@@ -4,6 +4,7 @@ import useAemQuery from '../api/useAemQuery';
 import { getSampleCourseDetail } from '../utils/sampleData';
 import Loading from './base/Loading';
 import Error from './base/Error';
+import { useCart } from '../context/CartContext';
 
 function difficultyClass(level) {
   if (!level) return '';
@@ -31,6 +32,21 @@ function stripTagNamespace(tag) {
   return typeof tag === 'string' ? tag.replace(/^[^:]+:/, '') : tag;
 }
 
+function capitalize(str) {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function formatDuration(duration) {
+  if (!duration) return duration;
+  return duration.replace(/(\d+)\s*([hdw])/gi, (_, num, unit) => {
+    const n = parseInt(num, 10);
+    const map = { h: 'Hour', d: 'Day', w: 'Week' };
+    const label = map[unit.toLowerCase()] || unit;
+    return `${n} ${label}${n !== 1 ? 's' : ''}`;
+  });
+}
+
 function CourseDetailRender({ course }) {
   const {
     _path,
@@ -44,6 +60,8 @@ function CourseDetailRender({ course }) {
     courseImage,
     tags,
   } = course;
+
+  const { addToCart } = useCart();
 
   const editorProps = _path ? {
     'data-aue-resource': `urn:aemconnection:${_path}/jcr:content/data/master`,
@@ -60,17 +78,16 @@ function CourseDetailRender({ course }) {
     <div className="detail-shell" {...editorProps}>
       <div
         className="detail-hero"
-        style={heroImg ? { backgroundImage: `url(${heroImg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
         data-aue-resource={_path ? `urn:aemconnection:${_path}/jcr:content/data/master` : undefined}
         data-aue-type={_path ? 'reference' : undefined}
       >
         <div className="detail-meta">
           <span className={`badge ${difficultyClass(difficultyLevel)}`} data-aue-prop="difficultyLevel" data-aue-type="text">
-            {difficultyLevel}
+            {capitalize(difficultyLevel)}
           </span>
           {duration && (
             <span className="pill">
-              ⏱ <span data-aue-prop="duration" data-aue-type="text">{duration}</span>
+              ⏱ <span data-aue-prop="duration" data-aue-type="text">{formatDuration(duration)}</span>
             </span>
           )}
         </div>
@@ -110,6 +127,14 @@ function CourseDetailRender({ course }) {
         </div>
 
         <div className="detail-side">
+          <div className="detail-actions">
+            <button className="btn-add-cart" aria-label="Add to Cart" onClick={() => addToCart(course)}>
+              🛒 Add to Cart
+            </button>
+            <button className="btn-bookmark" aria-label="Bookmark as Favorite">
+              ⭐ Bookmark as Favorite
+            </button>
+          </div>
           <div className="material">
             <h4>Course Material</h4>
             {courseMaterial?._publishUrl ? (
@@ -173,14 +198,32 @@ function CourseDetailContent() {
 
 function CourseDetail() {
   const navigate = useNavigate();
+  const { items } = useCart();
 
   return (
     <>
       <header className="topbar">
-        <button className="back-link" onClick={() => navigate(-1)}>
-          ← Siemens Learning Hub
-        </button>
+        <input
+          className="search-input"
+          type="search"
+          placeholder="Search courses…"
+          aria-label="Search courses"
+        />
+        <div className="topbar-actions">
+          <button className="icon-btn" title="Shopping Cart" aria-label="Shopping Cart">
+            🛒
+            {items.length > 0 && <span className="cart-badge">{items.length}</span>}
+          </button>
+          <button className="icon-btn" title="Notifications" aria-label="Notifications">🔔</button>
+          <button className="icon-btn" title="Messages" aria-label="Messages">✉️</button>
+          <div className="avatar" title="Profile">SL</div>
+        </div>
       </header>
+      <nav className="detail-breadcrumb">
+        <button className="back-link" onClick={() => navigate(-1)}>
+          ← Back to Courses
+        </button>
+      </nav>
       <CourseDetailContent />
     </>
   );

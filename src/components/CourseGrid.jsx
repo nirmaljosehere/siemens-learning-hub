@@ -3,6 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import useAemQuery from '../api/useAemQuery';
 import { getAemConfig } from '../utils/aemConfig';
 import { SAMPLE_COURSES } from '../utils/sampleData';
+import { useCart } from '../context/CartContext';
+
+function stripTagNamespace(tag) {
+  return typeof tag === 'string' ? tag.replace(/^[^:]+:/, '') : tag;
+}
 
 function difficultyClass(level) {
   if (!level) return '';
@@ -11,6 +16,21 @@ function difficultyClass(level) {
   if (l === 'intermediate') return 'badge-intermediate';
   if (l === 'advanced') return 'badge-advanced';
   return '';
+}
+
+function capitalize(str) {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function formatDuration(duration) {
+  if (!duration) return duration;
+  return duration.replace(/(\d+)\s*([hdw])/gi, (_, num, unit) => {
+    const n = parseInt(num, 10);
+    const map = { h: 'Hour', d: 'Day', w: 'Week' };
+    const label = map[unit.toLowerCase()] || unit;
+    return `${n} ${label}${n !== 1 ? 's' : ''}`;
+  });
 }
 
 function CardPlaceholder({ title, difficultyLevel }) {
@@ -47,6 +67,7 @@ function CardPlaceholder({ title, difficultyLevel }) {
 
 function CourseCard({ course }) {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   const { _path, slug, title, duration, difficultyLevel, tags, shortDescription, courseImage } = course;
   const { publishHost } = getAemConfig();
   const imgSrc = courseImage?._path ? `${publishHost}${courseImage._path}` : null;
@@ -72,16 +93,24 @@ function CourseCard({ course }) {
         ) : (
           <CardPlaceholder title={title} difficultyLevel={difficultyLevel} />
         )}
+        <button
+          className="card-media-cart-btn"
+          title="Add to Cart"
+          aria-label="Add to Cart"
+          onClick={(e) => { e.stopPropagation(); addToCart(course); }}
+        >
+          🛒
+        </button>
       </div>
       <div className="card-body">
         <div className="card-meta">
           <span className={`badge ${difficultyClass(difficultyLevel)}`} data-aue-prop="difficultyLevel" data-aue-type="text">
-            {difficultyLevel}
+            {capitalize(difficultyLevel)}
           </span>
           {duration && (
             <span className="pill">
               <span className="icon">⏱</span>
-              <span data-aue-prop="duration" data-aue-type="text">{duration}</span>
+              <span data-aue-prop="duration" data-aue-type="text">{formatDuration(duration)}</span>
             </span>
           )}
         </div>
@@ -94,7 +123,7 @@ function CourseCard({ course }) {
         {tags?.length > 0 && (
           <div className="tags">
             {tags.map((tag) => (
-              <span key={tag} className="tag">{tag}</span>
+              <span key={tag} className="tag">{stripTagNamespace(tag)}</span>
             ))}
           </div>
         )}

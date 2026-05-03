@@ -7,6 +7,7 @@ import AemConfigModal from './components/AemConfigModal';
 import { getProtocol, getAuthorHost, getService } from './utils/fetchData';
 import { getAemConfig } from './utils/aemConfig';
 import siemensLogo from './images/siemens-logo.svg';
+import { CartProvider } from './context/CartContext';
 import './App.scss';
 
 const NAV_ITEMS = [
@@ -111,6 +112,7 @@ function App() {
         )}
       </Helmet>
 
+      <CartProvider>
       <Router>
         <div className="app-shell">
           <Sidebar
@@ -125,6 +127,7 @@ function App() {
           </main>
         </div>
       </Router>
+      </CartProvider>
 
       <AemConfigModal
         isOpen={configOpen}
