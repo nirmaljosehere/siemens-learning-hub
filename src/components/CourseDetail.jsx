@@ -124,19 +124,8 @@ function CourseDetailRender({ course }) {
               </ul>
             </>
           )}
-        </div>
-
-        <div className="detail-side">
-          <div className="detail-actions">
-            <button className="btn-add-cart" aria-label="Add to Cart" onClick={() => addToCart(course)}>
-              🛒 Add to Cart
-            </button>
-            <button className="btn-bookmark" aria-label="Bookmark as Favorite">
-              ⭐ Bookmark as Favorite
-            </button>
-          </div>
           <div className="material">
-            <h4>Course Material</h4>
+            <h3>Course Material</h3>
             {courseMaterial?._publishUrl ? (
               <button
                 className="btn-primary"
@@ -150,6 +139,17 @@ function CourseDetailRender({ course }) {
             ) : (
               <p>No downloadable material available for this course.</p>
             )}
+          </div>
+        </div>
+
+        <div className="detail-side">
+          <div className="detail-actions">
+            <button className="btn-add-cart" aria-label="Add to Cart" onClick={() => addToCart(course)}>
+              🛒 Add to Cart
+            </button>
+            <button className="btn-bookmark" aria-label="Bookmark as Favorite">
+              ⭐ Bookmark as Favorite
+            </button>
           </div>
         </div>
       </div>
