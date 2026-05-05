@@ -93,7 +93,7 @@ const DETAIL_EXTRAS = {
       'Basic understanding of industrial automation',
       'Familiarity with electrical schematics',
     ],
-    courseMaterial: { _path: '/content/dam/siemens-learning/materials/tia-portal-intro.pdf', _publishUrl: '#sample-material' },
+    courseMaterial: [{ _path: '/content/dam/siemens-learning/materials/tia-portal-intro.pdf', _publishUrl: '#sample-material' }],
   },
   '/content/dam/siemens-learning/courses/simatic-s7-1500-fundamentals': {
     learningObjectives: [

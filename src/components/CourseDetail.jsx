@@ -126,16 +126,28 @@ function CourseDetailRender({ course }) {
           )}
           <div className="material">
             <h3>Course Material</h3>
-            {courseMaterial?._publishUrl ? (
-              <button
-                className="btn-primary"
-                onClick={() => window.open(courseMaterial._publishUrl, '_blank')}
-                data-aue-prop="courseMaterial"
-                data-aue-type="media"
-              >
-                Download PDF
-                <span className="mat-name">{courseMaterial._path?.split('/').pop()}</span>
-              </button>
+            {Array.isArray(courseMaterial) && courseMaterial.length > 0 ? (
+              <ul className="material-list">
+                {courseMaterial.map((item, i) => {
+                  const url = item._publishUrl || item._authorUrl;
+                  const filename = decodeURIComponent(item._path?.split('/').pop() || '');
+                  return url ? (
+                    <li key={i}>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-download"
+                        data-aue-prop="courseMaterial"
+                        data-aue-type="media"
+                        download
+                      >
+                        ⬇ {filename || 'Download Material'}
+                      </a>
+                    </li>
+                  ) : null;
+                })}
+              </ul>
             ) : (
               <p>No downloadable material available for this course.</p>
             )}
