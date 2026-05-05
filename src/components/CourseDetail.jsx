@@ -127,27 +127,57 @@ function CourseDetailRender({ course }) {
           <div className="material">
             <h3>Course Material</h3>
             {Array.isArray(courseMaterial) && courseMaterial.length > 0 ? (
-              <ul className="material-list">
+              <div className="material-grid">
                 {courseMaterial.map((item, i) => {
                   const url = item._publishUrl || item._authorUrl;
-                  const filename = decodeURIComponent(item._path?.split('/').pop() || '');
+                  const filename = decodeURIComponent(item._path?.split('/').pop() || 'Download');
+                  const isPdf = item.format === 'application/pdf' || filename.toLowerCase().endsWith('.pdf');
                   return url ? (
-                    <li key={i}>
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-download"
-                        data-aue-prop="courseMaterial"
-                        data-aue-type="media"
-                        download
-                      >
-                        ⬇ {filename || 'Download Material'}
-                      </a>
-                    </li>
+                    <a
+                      key={i}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`material-card${isPdf ? ' material-card--pdf' : ''}`}
+                      data-aue-prop="courseMaterial"
+                      data-aue-type="media"
+                      download
+                    >
+                      <div className="material-thumb">
+                        {isPdf ? (
+                          <svg viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect width="40" height="48" rx="4" fill="#E8F4F8"/>
+                            <path d="M8 0h18l14 14v30a4 4 0 01-4 4H8a4 4 0 01-4-4V4a4 4 0 014-4z" fill="#fff" stroke="#cfd6dc" strokeWidth="1"/>
+                            <path d="M26 0l14 14H30a4 4 0 01-4-4V0z" fill="#cfd6dc"/>
+                            <rect x="6" y="28" width="28" height="14" rx="2" fill="#E53935"/>
+                            <text x="20" y="39" textAnchor="middle" fill="#fff" fontSize="8" fontWeight="700" fontFamily="Arial,sans-serif">PDF</text>
+                            <line x1="10" y1="20" x2="30" y2="20" stroke="#cfd6dc" strokeWidth="1.5"/>
+                            <line x1="10" y1="24" x2="24" y2="24" stroke="#cfd6dc" strokeWidth="1.5"/>
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M8 0h18l14 14v30a4 4 0 01-4 4H8a4 4 0 01-4-4V4a4 4 0 014-4z" fill="#fff" stroke="#cfd6dc" strokeWidth="1"/>
+                            <path d="M26 0l14 14H30a4 4 0 01-4-4V0z" fill="#cfd6dc"/>
+                            <line x1="10" y1="20" x2="30" y2="20" stroke="#cfd6dc" strokeWidth="1.5"/>
+                            <line x1="10" y1="26" x2="30" y2="26" stroke="#cfd6dc" strokeWidth="1.5"/>
+                            <line x1="10" y1="32" x2="22" y2="32" stroke="#cfd6dc" strokeWidth="1.5"/>
+                          </svg>
+                        )}
+                      </div>
+                      <div className="material-info">
+                        <span className="material-name">{filename}</span>
+                        <span className="material-type">{isPdf ? 'PDF Document' : 'Download'}</span>
+                      </div>
+                      <div className="material-dl-icon" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M3 13h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                      </div>
+                    </a>
                   ) : null;
                 })}
-              </ul>
+              </div>
             ) : (
               <p>No downloadable material available for this course.</p>
             )}
