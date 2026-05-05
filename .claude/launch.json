@@ -1,8 +1,8 @@
-{
+﻿{
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "siemens-learning-hub",
+      "name": "Siemens Learning Hub (React)",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["start"],
       "port": 3000

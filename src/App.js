@@ -53,21 +53,23 @@ function Sidebar({ onOpenConfig, aemStatus }) {
         ))}
       </nav>
 
-      <button
-        className={`aem-config-btn ${aemStatus}`}
-        onClick={onOpenConfig}
-        title="Configure AEM connection"
-      >
-        <span className="aem-dot" />
-        <span>
-          {aemStatus === 'connected' ? 'AEM Connected' : aemStatus === 'error' ? 'AEM Error — configure' : 'Configure AEM'}
-        </span>
-        <span style={{ marginLeft: 'auto', fontSize: 14 }}>⚙️</span>
-      </button>
+      <div className="sidebar-bottom">
+        <button
+          className={`aem-config-btn ${aemStatus}`}
+          onClick={onOpenConfig}
+          title="Configure AEM connection"
+        >
+          <span className="aem-dot" />
+          <span>
+            {aemStatus === 'connected' ? 'AEM Connected' : aemStatus === 'error' ? 'AEM Error — configure' : 'Configure AEM'}
+          </span>
+          <span style={{ marginLeft: 'auto', fontSize: 14 }}>⚙️</span>
+        </button>
 
-      <div className="promo">
-        <strong>Powered by AEM Headless</strong>
-        <p>Content managed in Adobe Experience Manager and delivered via GraphQL.</p>
+        <div className="promo">
+          <strong>Powered by AEM Headless</strong>
+          <p>Content managed in Adobe Experience Manager and delivered via GraphQL.</p>
+        </div>
       </div>
     </aside>
   );

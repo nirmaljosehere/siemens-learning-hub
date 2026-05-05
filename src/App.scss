@@ -80,8 +80,14 @@ body {
   }
 }
 
-.promo {
+.sidebar-bottom {
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.promo {
   background: linear-gradient(160deg, #e6f6f6 0%, #eaf3fa 100%);
   border: 1px solid #d4ecec;
   border-radius: $radius;
@@ -728,8 +734,11 @@ body {
 // ── Featured Video ─────────────────────────────────────────────────────────
 .featured-video {
   margin-top: 48px;
-  padding-top: 32px;
-  border-top: 1px solid $line;
+  padding: 32px;
+  background: $paper;
+  border: 1px solid $line;
+  border-radius: $radius;
+  box-shadow: $shadow-1;
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 32px;
@@ -826,8 +835,11 @@ body {
 // ── Featured Insights (live AEM section) ───────────────────────────────────
 .featured-insights {
   margin-top: 48px;
-  padding-top: 32px;
-  border-top: 1px solid $line;
+  padding: 32px;
+  background: $paper;
+  border: 1px solid $line;
+  border-radius: $radius;
+  box-shadow: $shadow-1;
 }
 
 .section-header {
@@ -872,37 +884,36 @@ body {
   50%       { opacity: 0.3; }
 }
 
-.insights-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 66.667%;
 }
 
 .insight-card {
   display: flex;
-  gap: 18px;
+  flex-direction: column;
   background: $paper;
   border: 1px solid $line;
   border-radius: $radius;
   overflow: hidden;
   box-shadow: $shadow-1;
-  transition: box-shadow 180ms ease, border-color 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 
   &:hover {
+    transform: translateY(-2px);
     box-shadow: $shadow-2;
     border-color: #d6e3e8;
   }
 }
 
 .insight-img {
-  flex-shrink: 0;
-  width: 160px;
-  min-height: 120px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   background: linear-gradient(135deg, $siemens-petrol, $siemens-deep);
   overflow: hidden;
+  flex-shrink: 0;
 
   img {
     width: 100%;
@@ -915,26 +926,24 @@ body {
 .insight-img-placeholder {
   width: 100%;
   height: 100%;
-  min-height: 120px;
   display: grid;
   place-items: center;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.35);
 }
 
 .insight-body {
-  padding: 16px 18px 16px 0;
+  padding: 16px 18px 20px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
-  min-width: 0;
 }
 
 .insight-title {
-  margin: 4px 0 0;
-  font-size: 16px;
+  margin: 0;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.35;
   color: $ink;
@@ -944,20 +953,24 @@ body {
   margin: 0;
   font-size: 13px;
   color: $ink-2;
-  line-height: 1.5;
+  line-height: 1.55;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .insight-link {
   margin-top: auto;
+  padding-top: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: $siemens-deep;
+  color: $siemens-petrol;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 
-  &:hover { text-decoration: underline; }
+  &:hover { color: $siemens-deep; text-decoration: underline; }
 }
 
 .insights-error {
@@ -987,7 +1000,7 @@ body {
 }
 
 @media (max-width: $mobile-breakpoint) {
-  .insight-img { width: 100px; }
+  .insights-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: $xs-breakpoint) {

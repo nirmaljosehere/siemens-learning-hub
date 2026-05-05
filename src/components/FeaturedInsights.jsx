@@ -16,23 +16,22 @@ function FeaturedInsights({ onError }) {
   return (
     <section className="featured-insights">
       <div className="section-header">
-        <h2 className="section-title">Featured Insights</h2>
-        <span className="aem-badge">Live from AEM</span>
+        <h2 className="section-title">Your individual learning journey</h2>
       </div>
 
       {loading && (
-        <ul className="insights-list">
+        <div className="insights-grid">
           {[...Array(3)].map((_, i) => (
-            <li key={i} className="insight-card skeleton">
+            <div key={i} className="insight-card skeleton">
               <div className="skeleton-block insight-img" />
               <div className="insight-body">
                 <div className="skeleton-line w40" />
                 <div className="skeleton-line w80" />
                 <div className="skeleton-line w60" />
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
 
       {!loading && errorMessage && (
@@ -53,11 +52,11 @@ function FeaturedInsights({ onError }) {
       )}
 
       {!loading && data && (
-        <ul className="insights-list">
+        <div className="insights-grid">
           {data.ingArticleList?.items?.map((article) => (
             <InsightCard key={article._path} article={article} />
           ))}
-        </ul>
+        </div>
       )}
     </section>
   );
@@ -81,7 +80,7 @@ function InsightCard({ article }) {
     : null;
 
   return (
-    <li className="insight-card" {...editorProps}>
+    <article className="insight-card" {...editorProps}>
       <div className="insight-img">
         {imgSrc ? (
           <img src={imgSrc} alt={title} data-aue-prop="primaryImage" data-aue-type="media" />
@@ -90,7 +89,6 @@ function InsightCard({ article }) {
         )}
       </div>
       <div className="insight-body">
-        {articleType && <span className="badge">{articleType}</span>}
         <h3 className="insight-title" data-aue-prop="title" data-aue-type="text">{title}</h3>
         {summary?.plaintext && (
           <p className="insight-summary" data-aue-prop="summary" data-aue-type="text">
@@ -101,10 +99,10 @@ function InsightCard({ article }) {
           to={`/ing/articles/${slug}${window.location.search}`}
           className="insight-link"
         >
-          Read more →
+          Explore →
         </Link>
       </div>
-    </li>
+    </article>
   );
 }
 
