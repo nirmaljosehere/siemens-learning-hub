@@ -725,6 +725,64 @@ body {
   .detail-hero h1 { font-size: 24px; }
 }
 
+// ── Featured Video ─────────────────────────────────────────────────────────
+.featured-video {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid $line;
+
+  .section-title { margin: 0 0 20px; font-size: 20px; font-weight: 700; letter-spacing: -0.1px; }
+}
+
+.fv-player-wrap {
+  width: 100%;
+  max-width: 560px;
+  border-radius: $radius;
+  overflow: hidden;
+  background: $siemens-navy;
+  aspect-ratio: 16 / 9;
+  box-shadow: $shadow-2;
+}
+
+.fv-player {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #000;
+}
+
+.fv-poster {
+  width: 100%;
+  height: 100%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, $siemens-navy 0%, $siemens-deep 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  transition: filter 150ms ease;
+
+  &:hover { filter: brightness(1.12); }
+  &:hover .fv-play-btn { transform: scale(1.08); }
+}
+
+.fv-play-btn {
+  width: 64px;
+  height: 64px;
+  transition: transform 150ms ease;
+
+  svg { width: 64px; height: 64px; display: block; }
+}
+
+.fv-poster-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
 // ── Featured Insights (live AEM section) ───────────────────────────────────
 .featured-insights {
   margin-top: 48px;

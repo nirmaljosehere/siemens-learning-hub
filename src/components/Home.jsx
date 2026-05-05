@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CourseGrid from './CourseGrid';
 import FeaturedInsights from './FeaturedInsights';
+import FeaturedVideo from './FeaturedVideo';
 import { useCart } from '../context/CartContext';
 
 const DURATION_FILTERS = [
@@ -61,6 +62,7 @@ function Home({ onAemError }) {
         durationFilter={durationFilter === 'all' ? '' : durationFilter}
       />
 
+      <FeaturedVideo />
       <FeaturedInsights onError={onAemError} />
     </>
   );
