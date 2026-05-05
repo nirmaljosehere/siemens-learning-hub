@@ -730,13 +730,56 @@ body {
   margin-top: 48px;
   padding-top: 32px;
   border-top: 1px solid $line;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 32px;
+  align-items: center;
+}
 
-  .section-title { margin: 0 0 20px; font-size: 20px; font-weight: 700; letter-spacing: -0.1px; }
+.fv-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fv-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: $siemens-petrol;
+}
+
+.fv-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: $siemens-navy;
+  letter-spacing: -0.2px;
+  line-height: 1.25;
+}
+
+.fv-desc {
+  margin: 0;
+  font-size: 14px;
+  color: $ink-2;
+  line-height: 1.6;
+}
+
+.fv-reset {
+  margin-top: 4px;
+  align-self: flex-start;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: $ink-3;
+  padding: 0;
+  &:hover { color: $ink; }
 }
 
 .fv-player-wrap {
   width: 100%;
-  max-width: 560px;
   border-radius: $radius;
   overflow: hidden;
   background: $siemens-navy;
@@ -758,10 +801,8 @@ body {
   cursor: pointer;
   background: linear-gradient(135deg, $siemens-navy 0%, $siemens-deep 100%);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
   transition: filter 150ms ease;
 
   &:hover { filter: brightness(1.12); }
@@ -769,18 +810,17 @@ body {
 }
 
 .fv-play-btn {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   transition: transform 150ms ease;
 
-  svg { width: 64px; height: 64px; display: block; }
+  svg { width: 56px; height: 56px; display: block; }
 }
 
-.fv-poster-label {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
+@media (max-width: $mobile-breakpoint) {
+  .featured-video {
+    grid-template-columns: 1fr;
+  }
 }
 
 // ── Featured Insights (live AEM section) ───────────────────────────────────
