@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-do
 import Home from './components/Home';
 import CourseDetail from './components/CourseDetail';
 import AemConfigModal from './components/AemConfigModal';
+import LoginPage from './components/LoginPage';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { getProtocol, getAuthorHost, getService } from './utils/fetchData';
 import { getAemConfig } from './utils/aemConfig';
 import siemensLogo from './images/siemens-logo.svg';
@@ -26,6 +28,7 @@ const NAV_HELP = [
 export const AEM_CONFIG_EVENT = 'aem:open-config';
 
 function Sidebar({ onOpenConfig, aemStatus }) {
+  const { logout } = useAuth();
   return (
     <aside className="sidebar">
       <a className="brand" href="/">
@@ -71,11 +74,16 @@ function Sidebar({ onOpenConfig, aemStatus }) {
           <p>Content managed in Adobe Experience Manager and delivered via GraphQL.</p>
         </div>
       </div>
+
+      <button className="logout-btn" onClick={logout} title="Sign out">
+        <span>⎋</span> Sign out
+      </button>
     </aside>
   );
 }
 
-function App() {
+function AppShell() {
+  const { authed } = useAuth();
   const [configOpen, setConfigOpen] = useState(false);
   const [aemStatus, setAemStatus] = useState('idle'); // idle | connected | error
 
@@ -97,6 +105,8 @@ function App() {
     // Reload to re-trigger all useAemQuery hooks with the new token
     window.location.reload();
   }
+
+  if (!authed) return <LoginPage />;
 
   return (
     <HelmetProvider>
@@ -137,6 +147,14 @@ function App() {
         onSave={handleSave}
       />
     </HelmetProvider>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppShell />
+    </AuthProvider>
   );
 }
 

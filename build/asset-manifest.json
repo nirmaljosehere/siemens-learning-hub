@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.a3ebee68.chunk.css",
-    "main.js": "/static/js/main.ff7bf99c.chunk.js",
+    "main.css": "/static/css/main.4d9850af.chunk.css",
+    "main.js": "/static/js/main.600ff2a3.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.d562e2cc.js",
-    "static/js/2.a262383f.chunk.js": "/static/js/2.a262383f.chunk.js",
+    "static/js/2.8e58d678.chunk.js": "/static/js/2.8e58d678.chunk.js",
     "index.html": "/index.html",
-    "static/js/2.a262383f.chunk.js.LICENSE.txt": "/static/js/2.a262383f.chunk.js.LICENSE.txt",
+    "static/js/2.8e58d678.chunk.js.LICENSE.txt": "/static/js/2.8e58d678.chunk.js.LICENSE.txt",
     "static/media/siemens-logo.e06240d8.svg": "/static/media/siemens-logo.e06240d8.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.d562e2cc.js",
-    "static/js/2.a262383f.chunk.js",
-    "static/css/main.a3ebee68.chunk.css",
-    "static/js/main.ff7bf99c.chunk.js"
+    "static/js/2.8e58d678.chunk.js",
+    "static/css/main.4d9850af.chunk.css",
+    "static/js/main.600ff2a3.chunk.js"
   ]
 }
